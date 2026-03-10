@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+
+:root {
+    --primary-color: #1f5d52;
+}
+
+.font-didot {
+    font-family: "GFS Didot", serif;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.main {
+    min-height: 100vh;
+}
+
+.customebtn-bg {
+    background-color: var(--primary-color);
+}
+
+.radial-gradient {
+    background: radial-gradient(80.33% 50%, rgba(185, 216, 173, .3) 40.38%, rgba(255, 255, 255, .3) 100%);
+}
+
+.section-heading h1{
+    color: var(--primary-color);
+}
