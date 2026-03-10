@@ -20,7 +20,7 @@ export default function Navbar() {
 
           <nav className="hidden lg:flex items-center justify-center flex-1 space-x-8 md:gap-[49.42px] md:space-x-0">
             <a className="text-[#545454] text-[18px]" href="/">Home</a>
-            <a className="text-[#545454] text-[18px]" href="/">Treatments</a>
+            <a className="text-[#545454] text-[18px]" href="/medicine">Treatments</a>
             <a className="text-[#545454] text-[18px]" href="/">Reviews</a>
             <a className="text-[#545454] text-[18px]" href="/">Blog</a>
             <a className="text-[#545454] text-[18px]" href="/">FAQ</a>
