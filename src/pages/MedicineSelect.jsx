@@ -1,7 +1,7 @@
 import { useState } from "react";
-import minoxidil from "../assets/Minoxidil.png";
-import sprayLotion from "../assets/spray_lotion.png";
-import twoInOne from "../assets/2-in-1.png";
+import minoxidil from "@assets/Minoxidil.png";
+import sprayLotion from "@assets/spray_lotion.png";
+import twoInOne from "@assets/2-in-1.png";
 
 const medicines = [
   {
@@ -58,17 +58,17 @@ export default function MedicineSelect() {
 
                 <h1 className="text-2xl font-bold text-green-950">Select a medicine</h1>
 
-                {medicines.map((med) => (
+                {medicines.map((medicine) => (
                 <label
-                    key={med.id}
-                    onClick={() => setSelected(med.id)}
+                    key={medicine.id}
+                    onClick={() => setSelected(medicine.id)}
                     className={`flex flex-col rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-200 ${
-                    selected === med.id
+                    selected === medicine.id
                         ? "border-green-900 bg-green-50"
                         : "border-gray-200 bg-white"
                     }`}
                 >
-                    {med.recommended && (
+                    {medicine.recommended && (
                     <div className="flex items-center justify-center py-2 bg-green-900">
                         <span className="text-xs font-medium text-green-200 tracking-wide">
                         Recommended
@@ -79,13 +79,13 @@ export default function MedicineSelect() {
                     <div className="flex flex-col gap-3 p-4">
                     <div className="flex flex-row items-start justify-between gap-3">
                         <div className="flex flex-col gap-0.5">
-                        <span className="text-base font-bold text-green-950">{med.name}</span>
+                        <span className="text-base font-bold text-green-950">{medicine.name}</span>
                         <span className="text-sm text-green-950">
-                            starting at <span className="font-bold">{med.price}</span>
+                            starting at <span className="font-bold">{medicine.price}</span>
                         </span>
                         </div>
                         <div className="flex items-center justify-center w-12 h-12 shrink-0">
-                        <img src={med.img} alt={med.name} />
+                        <img src={medicine.img} alt={medicine.name} />
                         </div>
                     </div>
 
@@ -93,12 +93,12 @@ export default function MedicineSelect() {
                     <div className="flex flex-row items-center">
                         <span className="flex items-center gap-1 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
                         <PlusIcon />
-                        {med.type}
+                        {medicine.type}
                         </span>
                     </div>
 
                     {/* Description */}
-                    <p className="text-xs text-green-800 leading-relaxed">{med.desc}</p>
+                    <p className="text-xs text-green-800 leading-relaxed">{medicine.desc}</p>
 
                     {/* Footer */}
                     <div className="flex flex-row items-center justify-between">
@@ -110,7 +110,7 @@ export default function MedicineSelect() {
                         type="radio"
                         name="option"
                         readOnly
-                        checked={selected === med.id}
+                        checked={selected === medicine.id}
                         className="w-5 h-5 border-2 border-green-900 accent-green-900"
                         />
                     </div>

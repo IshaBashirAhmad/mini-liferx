@@ -1,7 +1,7 @@
 
-import weightlossMed from "../assets/weightloss-med.png";
-import boostPerformance from "../assets/BoostPerformance.webp";
-import hairloss from "../assets/hairloss.webp";
+import weightlossMed from "@assets/weightloss-med.png";
+import boostPerformance from "@assets/BoostPerformance.webp";
+import hairloss from "@assets/hairloss.webp";
 
 
 const ArrowButton = () => (

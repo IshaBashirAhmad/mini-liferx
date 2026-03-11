@@ -1,4 +1,4 @@
-import logo from "../assets/LifeRxmd.svg";
+import logo from "@assets/LifeRxmd.svg";
 
 
 export default function Navbar() {
