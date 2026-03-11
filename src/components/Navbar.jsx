@@ -29,6 +29,7 @@ export default function Navbar() {
           <div className="lg:flex flex-shrink-0">
             <button
               type="button"
+              onClick={() => (window.location.href = "/login")}
               className="w-[106px] text-center py-[10px] px-[30px] customebtn-bg text-white rounded-[10px] text-[16px] font-normal"
             >
               Login
