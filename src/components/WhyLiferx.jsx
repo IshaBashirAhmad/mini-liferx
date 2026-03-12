@@ -1,8 +1,8 @@
 
-import c11 from "../assets/C11.svg";
-import c22 from "../assets/C22.svg";
-import c44 from "../assets/C44.svg";
-import c55 from "../assets/C55.svg";
+import c11 from "@assets/C11.svg";
+import c22 from "@assets/C22.svg";
+import c44 from "@assets/C44.svg";
+import c55 from "@assets/C55.svg";
 
 const features = [
   { icon: c22, label: "Online consultation" },

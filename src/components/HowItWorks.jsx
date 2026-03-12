@@ -1,7 +1,7 @@
 
-import step1 from "../assets/Step-11.webp";
-import step2 from "../assets/Step-22.webp";
-import step3 from "../assets/Step-33.webp";
+import step1 from "@assets/Step-11.webp";
+import step2 from "@assets/Step-22.webp";
+import step3 from "@assets/Step-33.webp";
 
 const steps = [
   { img: step1, title: "Tell Us About You", desc: "Fill out a Brief Questionnaire." },
