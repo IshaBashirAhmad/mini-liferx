@@ -50,14 +50,12 @@ class CheckoutSerializer(serializers.Serializer):
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source="product.name", read_only=True)
-    username = serializers.CharField(source="user.username", read_only=True)
     email = serializers.CharField(source="user.email", read_only=True)
 
     class Meta:
         model = Order
         fields = [
             "id",
-            "username",
             "email",
             "product_name",
             "city",

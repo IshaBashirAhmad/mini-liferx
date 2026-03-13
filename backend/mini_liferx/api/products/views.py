@@ -126,7 +126,6 @@ class CheckoutPreviewView(APIView):
         return Response(
             {
                 "user": {
-                    "username": user.username,
                     "email": user.email,
                     "phone_number": user.phone_number,
                 },
