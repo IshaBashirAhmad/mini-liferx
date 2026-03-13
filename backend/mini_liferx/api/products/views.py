@@ -4,8 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Product, Question, UserAnswer
-from .serializers import ProductSerializer, QuestionSerializer, UserAnswerSubmitSerializer
+from .models import Order, Product, Question, UserAnswer
+from .serializers import CheckoutSerializer, OrderDetailSerializer, ProductSerializer, QuestionSerializer, UserAnswerSubmitSerializer
 
 
 class ProductListView(APIView):
@@ -100,3 +100,83 @@ class SubmitAnswersView(APIView):
             status=status.HTTP_201_CREATED
         )
 
+
+
+class CheckoutPreviewView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        product_id = request.query_params.get("product_id")
+
+        if not product_id:
+            return Response(
+                {"error": "product_id query param is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            product = Product.objects.select_related("service").get(id=product_id)
+        except Product.DoesNotExist:
+            return Response(
+                {"error": "product not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        user = request.user
+        return Response(
+            {
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                    "phone_number": user.phone_number,
+                },
+                "product": {
+                    "id": product.id,
+                    "name": product.name,
+                    "price": product.price,
+                    "service": product.service.name,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class PlaceOrderView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = CheckoutSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        product_id = serializer.validated_data["product_id"]
+        product = Product.objects.get(id=product_id)
+
+        order = Order.objects.create(
+            user=request.user,
+            product=product,
+            city=serializer.validated_data["city"],
+            address=serializer.validated_data["address"],
+            price=product.price,  
+        )
+
+        return Response(
+            {
+                "message": "Order placed!",
+                "order": OrderDetailSerializer(order).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class MyOrdersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        orders = Order.objects.filter(user=request.user).select_related(
+            "product", "product__service"
+        ).order_by("-created_at")
+
+        serializer = OrderDetailSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

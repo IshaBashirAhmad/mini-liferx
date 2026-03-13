@@ -57,7 +57,7 @@ class LoginView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        user = authenticate(request, username=user_obj.username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is None:
             return Response(
                 {"error": "Invalid credentials."},

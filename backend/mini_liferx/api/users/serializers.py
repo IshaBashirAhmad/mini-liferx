@@ -9,7 +9,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password", "phone_number"]
+        fields = ["id", "email", "password", "phone_number"]
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -18,7 +18,6 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"],
             phone_number=validated_data.get("phone_number", ""),
@@ -29,4 +28,4 @@ class SignupSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email", "phone_number"]
+        fields = ["id", "email", "phone_number"]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, Service, Product
+from .models import Order, Question, Service, Product
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -35,3 +35,34 @@ class UserAnswerSubmitSerializer(serializers.Serializer):
                     "question_id and answer is required for every answer"
                 )
         return value
+
+
+class CheckoutSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
+    city = serializers.CharField(max_length=255)
+    address = serializers.CharField()
+
+    def validate_product_id(self, value):
+        if not Product.objects.filter(id=value).exists():
+            raise serializers.ValidationError("This product does not exist.")
+        return value
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source="product.name", read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
+    email = serializers.CharField(source="user.email", read_only=True)
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "username",
+            "email",
+            "product_name",
+            "city",
+            "address",
+            "price",
+            "status",
+            "created_at",
+        ]
