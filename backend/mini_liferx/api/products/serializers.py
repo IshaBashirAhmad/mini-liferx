@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Order, Question, Service, Product
+from .models import Option, Order, Question, Service, Product
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -16,25 +16,29 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "description", "price", "service"]
 
 
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = ["id", "option_text"]
+
+
 class QuestionSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True, read_only=True)
+
     class Meta:
         model = Question
-        fields = ["id", "question_text"]
+        fields = ["id", "question_text", "question_type", "order", "options"]
 
 
-class UserAnswerSubmitSerializer(serializers.Serializer):
-    service_id = serializers.IntegerField()
-    answers = serializers.ListField(
-        child=serializers.DictField()
+class SingleAnswerSerializer(serializers.Serializer):
+    question_id = serializers.IntegerField()
+    text_answer = serializers.CharField(required=False, allow_blank=True)
+    selected_options = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        default=list
     )
 
-    def validate_answers(self, value):
-        for item in value:
-            if "question_id" not in item or "answer" not in item:
-                raise serializers.ValidationError(
-                    "question_id and answer is required for every answer"
-                )
-        return value
 
 
 class CheckoutSerializer(serializers.Serializer):
