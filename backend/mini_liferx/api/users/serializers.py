@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
 
+from api.users.models import Patient
+
 User = get_user_model()
 
 
@@ -21,7 +23,9 @@ class SignupSerializer(serializers.ModelSerializer):
             email=validated_data["email"],
             password=validated_data["password"],
             phone_number=validated_data.get("phone_number", ""),
+            role="patient",
         )
+        Patient.objects.create(user=user)
         return user
  
  
