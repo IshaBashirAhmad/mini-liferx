@@ -28,7 +28,7 @@ export default function MedicineSelect() {
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${VITE_API_BASE_URL}api/products/`);
-        if (!response.ok) throw new Error("Products load nahi hue.");
+        if (!response.ok) throw new Error("Products are not loded.");
         const data = await response.json();
         setProducts(data);
         if (data.length > 0) setSelected(data[0].id);
