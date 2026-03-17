@@ -105,30 +105,41 @@ class SubmitAnswerSerializer(serializers.ModelSerializer):
         answer_obj.save()
         return answer_obj
 
-class CheckoutSerializer(serializers.Serializer):
-    product_id = serializers.IntegerField()
-    city = serializers.CharField(max_length=255)
-    address = serializers.CharField()
+# serializers.py
+
+class CheckoutSerializer(serializers.ModelSerializer):
+    product_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Order
+        fields = ["product_id", "city", "address"]
 
     def validate_product_id(self, value):
         if not Product.objects.filter(id=value).exists():
-            raise serializers.ValidationError("This product does not exist.")
+            raise serializers.ValidationError("Product does not exist.")
+        return value
+
+    def validate_city(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("City cannot be empty.")
+        return value
+
+    def validate_address(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Address cannot be empty.")
         return value
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source="product.name", read_only=True)
-    email = serializers.CharField(source="user.email", read_only=True)
+    service_name = serializers.CharField(source="product.service.name", read_only=True)
+    patient_email = serializers.CharField(source="patient.user.email", read_only=True)
+    patient_phone = serializers.CharField(source="patient.user.phone_number", read_only=True)
 
     class Meta:
         model = Order
         fields = [
-            "id",
-            "email",
-            "product_name",
-            "city",
-            "address",
-            "price",
-            "status",
-            "created_at",
+            "id", "patient_email", "patient_phone",
+            "product_name", "service_name",
+            "city", "address", "price", "status", "created_at",
         ]

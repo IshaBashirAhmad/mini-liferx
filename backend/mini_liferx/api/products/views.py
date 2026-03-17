@@ -43,15 +43,20 @@ class SubmitAnswerViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         serializer.save(patient=patient)
 
 
-class CheckoutPreviewView(APIView):
-    permission_classes = [IsAuthenticated]
+class OrderViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    permission_classes = [IsPatient]
 
-    def get(self, request):
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CheckoutSerializer
+        return OrderDetailSerializer
+
+    def list(self, request):
         product_id = request.query_params.get("product_id")
 
         if not product_id:
             return Response(
-                {"error": "product_id query param is required."},
+                {"error": "product_id is required."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -59,68 +64,44 @@ class CheckoutPreviewView(APIView):
             product = Product.objects.select_related("service").get(id=product_id)
         except Product.DoesNotExist:
             return Response(
-                {"error": "product not found."},
+                {"error": "Product not found."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
         user = request.user
-        return Response(
-            {
-                "user": {
-                    "email": user.email,
-                    "phone_number": user.phone_number,
-                },
-                "product": {
-                    "id": product.id,
-                    "name": product.name,
-                    "price": product.price,
-                    "service": product.service.name,
-                },
+        return Response({
+            "user": {
+                "email": user.email,
+                "phone_number": user.phone_number,
             },
-            status=status.HTTP_200_OK,
+            "product": {
+                "id": product.id,
+                "name": product.name,
+                "price": product.price,
+                "service": product.service.name,
+            },
+        })
+
+    def perform_create(self, serializer):
+        product = Product.objects.get(
+            id=serializer.validated_data["product_id"]
         )
+        patient = self.request.user.patient_profile
 
-
-class PlaceOrderView(APIView):
-    permission_classes = [IsPatient]
-
-    def post(self, request):
-        serializer = CheckoutSerializer(data=request.data)
-
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        product_id = serializer.validated_data["product_id"]
-        product = Product.objects.get(id=product_id)
-        patient = request.user.patient_profile
-
-        order = Order.objects.create(
+        serializer.save(
             patient=patient,
             product=product,
-            city=serializer.validated_data["city"],
-            address=serializer.validated_data["address"],
             price=product.price,
         )
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
         return Response(
             {
-                "message": "Order placed!",
-                "order": OrderDetailSerializer(order).data,
+                "message": "Order placed successfully!",
+                "order": OrderDetailSerializer(serializer.instance).data,
             },
             status=status.HTTP_201_CREATED,
         )
-
-class MyOrdersView(APIView):
-    permission_classes = [IsPatient] 
-
-    def get(self, request):
-        patient = request.user.patient_profile
-
-        orders = Order.objects.filter(
-            patient=patient
-        ).select_related(
-            "product", "product__service"
-        ).order_by("-created_at")
-
-        serializer = OrderDetailSerializer(orders, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
