@@ -1,4 +1,5 @@
 import logo from "@assets/LifeRxmd.svg";
+import { Link } from "react-router-dom";
 
 
 export default function Navbar() {
@@ -19,11 +20,11 @@ export default function Navbar() {
           </a>
 
           <nav className="hidden lg:flex items-center justify-center flex-1 space-x-8 md:gap-[49.42px] md:space-x-0">
-            <a className="text-[#545454] text-[18px]" href="/">Home</a>
-            <a className="text-[#545454] text-[18px]" href="/medicine">Treatments</a>
-            <a className="text-[#545454] text-[18px]" href="/">Reviews</a>
-            <a className="text-[#545454] text-[18px]" href="/">Blog</a>
-            <a className="text-[#545454] text-[18px]" href="/">FAQ</a>
+            <Link className="text-[#545454] text-[18px]" to="/">Home</Link>
+            <Link className="text-[#545454] text-[18px]" to="/medicine">Treatments</Link>
+            <Link className="text-[#545454] text-[18px]" to="/">Reviews</Link>
+            <Link className="text-[#545454] text-[18px]" to="/">Blog</Link>
+            <Link className="text-[#545454] text-[18px]" to="/">FAQ</Link>
           </nav>
 
           <div className="lg:flex flex-shrink-0">
